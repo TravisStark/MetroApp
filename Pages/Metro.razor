@@ -1,0 +1,96 @@
+﻿@page "/metro"
+
+@inject MetroApiService MetroApiService
+@inject LocationService LocationService
+
+<h3>Washington Metro</h3>
+<br>
+
+<h4>Find the nearest 5 stations to your location</h4>
+<button @onclick="GetNearestStationsAsync">Find</button>
+
+@if (stations is null)
+{
+     
+}
+else
+{
+    <table class="table">
+        <thead class="table-primary">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Distance (Miles)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var station in stations)
+            {
+                <tr>
+                    <td scope="row">@station.Value.Name</td>
+                    <td>@station.Key</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br>
+
+<h4>Select a station</h4>
+
+<select @onchange="GetNextTrains">
+    @foreach (var station in MetroApiService.GetRailStations())
+    {
+        <option value="@station.Code">@station.Name</option>
+    }
+</select>
+<br>
+
+@if (trains is null)
+{
+    <p>Please select a station</p>
+}
+else
+{
+    <table class="table">
+        <thead class="table-primary">
+            <tr>
+                <th scope="col">Minutes Away</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Line</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var train in trains)
+            {
+                <tr>
+                    <td scope="row">@train.Min</td>
+                    <td>@train.Destination</td>
+                    <td>@train.Line</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Train> trains;
+    private Dictionary<double, Station> stations;
+
+
+    Location location;
+
+    async void GetNextTrains(ChangeEventArgs args)
+    {
+        trains = await MetroApiService.GetNextTrainsAsync(args.Value.ToString());
+    }
+
+    async void GetNearestStationsAsync()
+    {
+        location = await LocationService.GetLocationAsync();
+        stations = MetroApiService.GetNearestStations(location);
+    }
+
+
+
+}
