@@ -6107,34 +6107,38 @@
     ".NETCoreApp,Version=v3.1": [
       "AspNetMonsters.Blazor.Geolocation >= 0.5.0-preview1",
       "Geolocation >= 1.2.1",
-      "Microsoft.Azure.Cosmos >= *",
+      "Microsoft.Azure.Cosmos >= 3.11.0",
       "Microsoft.Extensions.Configuration >= 3.1.6",
-      "System.Net.Http.Json >= 3.2.1"
+      "System.Net.Http.Json >= 3.2.1",
+      "System.Text.Json >= 4.7.2"
     ]
   },
   "packageFolders": {
-    "/Users/travisstark/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\Travis\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/travisstark/repos/MetroApp/MetroApp.csproj",
+      "projectUniqueName": "E:\\repos\\MetroApp\\MetroApp.csproj",
       "projectName": "MetroApp",
-      "projectPath": "/Users/travisstark/repos/MetroApp/MetroApp.csproj",
-      "packagesPath": "/Users/travisstark/.nuget/packages/",
-      "outputPath": "/Users/travisstark/repos/MetroApp/obj/",
+      "projectPath": "E:\\repos\\MetroApp\\MetroApp.csproj",
+      "packagesPath": "C:\\Users\\Travis\\.nuget\\packages\\",
+      "outputPath": "E:\\repos\\MetroApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "/Users/travisstark/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Travis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -6161,7 +6165,7 @@
           },
           "Microsoft.Azure.Cosmos": {
             "target": "Package",
-            "version": "[*, )"
+            "version": "[3.11.0, )"
           },
           "Microsoft.Extensions.Configuration": {
             "target": "Package",
@@ -6170,6 +6174,10 @@
           "System.Net.Http.Json": {
             "target": "Package",
             "version": "[3.2.1, )"
+          },
+          "System.Text.Json": {
+            "target": "Package",
+            "version": "[4.7.2, )"
           }
         },
         "imports": [
@@ -6190,7 +6198,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,4 +1,5 @@
-using System;
+using Newtonsoft.Json;
+
 namespace MetroApp.Models
 {
     public class Station
@@ -18,5 +19,8 @@ namespace MetroApp.Models
         public double Lon { get; set; }
 
         public StationAddress Address { get; set; }
+
+        [JsonProperty(PropertyName = "id")]
+        public string Id => Code;
     }
 }

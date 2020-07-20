@@ -1,84 +1,104 @@
-﻿@page "/metro"
+﻿@page "/"
 
 @inject MetroApiService MetroApiService
 @inject LocationService LocationService
+@inject MetroApp.Services.ICosmosDbService CosmosDbService
 
 <h3>Washington Metro</h3>
 <br>
 
-<h4>Find the nearest 5 stations to your location</h4>
-<button @onclick="GetNearestStationsAsync">Find</button>
 
 @if (stations is null)
 {
-     
+<h4>Loading...</h4>
 }
 else
 {
-    <table class="table">
-        <thead class="table-primary">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Distance (Miles)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var station in stations)
-            {
+    <h4>Find the nearest 5 stations to your location</h4>
+    <button @onclick="GetNearestStationsAsync">Find</button>
+    <br />
+
+    @if (stationsWithDistance is null)
+    {
+
+    }
+    else
+    {
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Distance (Miles)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var station in stationsWithDistance)
+                        {
                 <tr>
                     <td scope="row">@station.Value.Name</td>
                     <td>@station.Key</td>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-
-<br>
-
-<h4>Select a station</h4>
-
-<select @onchange="GetNextTrains">
-    @foreach (var station in MetroApiService.GetRailStations())
-    {
-        <option value="@station.Code">@station.Name</option>
+                        }
+            </tbody>
+        </table>
+        <br />
     }
-</select>
-<br>
-
-@if (trains is null)
-{
-    <p>Please select a station</p>
-}
-else
-{
-    <table class="table">
-        <thead class="table-primary">
-            <tr>
-                <th scope="col">Minutes Away</th>
-                <th scope="col">Destination</th>
-                <th scope="col">Line</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var train in trains)
-            {
+    <h3>Arrival Times</h3>
+    <select value="@defaultStation" @onchange="GetNextTrains">
+        @foreach (var station in stations)
+        {
+            <option value="@station.Code">@station.Name</option>
+        }
+    </select>
+    <br>
+    @if (trains is null)
+    {
+        
+    }
+    else
+    {
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">Minutes Away</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Line</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var train in trains)
+                    {
                 <tr>
                     <td scope="row">@train.Min</td>
-                    <td>@train.Destination</td>
+                    <td>@train.DestinationName</td>
                     <td>@train.Line</td>
                 </tr>
-            }
-        </tbody>
-    </table>
+                    }
+            </tbody>
+        </table>
+    }
 }
+
+<br>
+
+
+
+<button @onclick="UpdateStationsInDb">Update Stations in Database</button>
 
 @code {
     private IEnumerable<Train> trains;
-    private Dictionary<double, Station> stations;
-
+    private Dictionary<double, Station> stationsWithDistance;
+    private IEnumerable<Station> stations;
+    private Station defaultStation;
 
     Location location;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var sql = "SELECT * FROM c";
+        stations = await CosmosDbService.GetStationsAsync(sql);
+        defaultStation = stations.First();
+    }
 
     async void GetNextTrains(ChangeEventArgs args)
     {
@@ -88,9 +108,12 @@ else
     async void GetNearestStationsAsync()
     {
         location = await LocationService.GetLocationAsync();
-        stations = MetroApiService.GetNearestStations(location);
+        stationsWithDistance = MetroApiService.GetNearestStations(stations, location);
     }
 
-
-
+    async void UpdateStationsInDb()
+    {
+        var stations = await MetroApiService.GetStationsAsync();
+        await CosmosDbService.AddStationsAsync(stations);
+    }
 }
